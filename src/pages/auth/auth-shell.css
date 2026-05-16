@@ -1,0 +1,8 @@
+.fitgenie-auth-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background: #0b0e0d;
+  overflow-x: hidden;
+}
