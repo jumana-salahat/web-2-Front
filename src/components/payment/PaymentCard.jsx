@@ -89,11 +89,49 @@ export default function PaymentCard() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validate()) {
-      alert("Payment Successful ✅");
+    if (!validate()) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "http://localhost:5000/api/payments",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: form.name,
+            card: form.card,
+            amount: 33,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert("Payment Successful ✅");
+
+        setForm({
+          name: "",
+          card: "",
+          expiry: "",
+          cvv: "",
+        });
+
+      } else {
+        alert(data.message || "Payment failed");
+      }
+
+    } catch (error) {
+      console.log(error);
+      alert("Server error");
     }
   };
 
